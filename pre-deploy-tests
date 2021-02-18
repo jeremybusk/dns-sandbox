@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+shellcheck -e SC2139,SC2046 deploy
+shellcheck install before-script pre-deploy-tests post-deploy-tests

@@ -1,0 +1,34 @@
+acl trusted_ipaddrs {
+  127.0.0.1;
+  192.168.0.0/16;
+  10.1.0.0/16;
+  172.16.0.0/12;
+  10.0.0.0/8;
+};
+
+options {
+  directory "/var/cache/bind";
+  listen-on port 153 { any; };
+  listen-on-v6 port 153 { any; };
+  version "not currently available";
+
+  forwarders {
+    8.8.8.8;
+    8.8.4.4;
+  };
+  forward only;
+
+  // dnssec-validation auto;  # Causes managed-keys-zone error
+  dnssec-validation yes;  # Use this instead of auto
+
+  recursion yes;
+  allow-recursion { trusted_ipaddrs; };
+  # allow-recursion { any; };
+  allow-transfer { none; };
+
+  response-policy { zone "veto"; };
+
+  # allow-query { any; };
+  # allow-query-cache { any; };
+  # querylog yes;  # Use for debug
+};

@@ -1,0 +1,11 @@
+zone "jexample.com" IN {
+        type master;
+        file "/etc/bind/jexample.com.zone";
+        allow-update { none; };
+        notify no;
+};
+
+zone "veto" {
+  type master;
+  file "/etc/bind/db.veto";
+};

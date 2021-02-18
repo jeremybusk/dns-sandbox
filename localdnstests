@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -ex
+echo "Running tests locally on host."
+dig @127.0.0.1 +short google.com -p 53

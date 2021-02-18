@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -e
+echo "Running dns stub resolvers deploy/refresh."
+eval $(ssh-agent -s)
+echo "$SSH_SECRET_KEY" | tr -d '\r' | ssh-add - > /dev/null
+scp -P 20004 dnsmasq.conf dnsmasq.hosts root@$SSH_HOST:/etc/
+ssh -p 20004 root@$SSH_HOST "systemctl restart dnsmasq"
+ssh -p 20004 root@$SSH_HOST "bash -s" -- < ./localdnstests
+scp -P 20005 dnsmasq.conf dnsmasq.hosts root@$SSH_HOST:/etc/
+ssh -p 20005 root@$SSH_HOST "systemctl restart dnsmasq"
+ssh -p 20005 root@$SSH_HOST "bash -s" -- < ./localdnstests
+scp -P 20004 dnsmasq.conf dnsmasq.hosts root@$SSH_HOST:/etc/
+
+
+# Bind9
+ssh -p 20004 root@$SSH_HOST "apt purge -y bind9; apt install -y bind9"
+scp -rP 20004 bind/* root@$SSH_HOST:/etc/bind/
+ssh -p 20004 root@$SSH_HOST "systemctl restart named"
+ssh -p 20005 root@$SSH_HOST "apt purge -y bind9; apt install -y bind9"
+scp -rP 20005 bind/* root@$SSH_HOST:/etc/bind/
+ssh -p 20005 root@$SSH_HOST "systemctl restart named"

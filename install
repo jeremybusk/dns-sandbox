@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -e
+apt-get update && sudo apt-get install -y dnsmasq
+systemctl stop systemd-resolved
+touch /etc/dnsmasq.hosts
+systemctl disable systemd-resolved
+systemctl mask systemd-resolved
+# cp dnsmasq.conf /etc/dnsmasq.conf
+echo "no-resolv" > /etc/dnsmasq.conf
+echo "server=8.8.8.8" >> /etc/dnsmasq.conf
+echo "server=8.8.4.4" >> /etc/dnsmasq.conf
+systemctl restart systemd-resolved
+
+
+# NOTES
+# To undo disable
+# systemctl unmask systemd-resolved
+# systemctl enable systemd-resolved
+# systemctl start systemd-resolved

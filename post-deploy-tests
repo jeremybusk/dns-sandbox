@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -ex
+dig @$SSH_HOST +short cisco.com -p 15353
+dig @$SSH_HOST +short dnstest1.example.com -p 15353 | grep 192.168.227.227 || exit 1
+dig @$SSH_HOST +short dnstest2.example.com -p 15353 | grep 192.168.227.228 || exit 1
+dig @$SSH_HOST +short -x 192.168.227.227 -p 15353 | grep dnstest1.example.com || exit 1
+dig @$SSH_HOST +short dnstest1.example.com -p 15354 | grep 192.168.227.227 || exit 1
+dig @$SSH_HOST +short dnstest2.example.com -p 15354 | grep 192.168.227.228 || exit 1
+dig @$SSH_HOST +short -x 192.168.227.227 -p 15354 | grep dnstest1.example.com || exit 1
+
+echo "Checking Bind services."
+dig @$SSH_HOST +short www.some-website.com -p 25353 | grep 127.0.0.1 || exit 1
+dig @$SSH_HOST +short google.com -p 25353
+dig @$SSH_HOST +short www.some-website.com -p 25354 | grep 127.0.0.1 || exit 1
+dig @$SSH_HOST +short google.com -p 25354

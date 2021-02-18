@@ -1,0 +1,6 @@
+# Override host resolutions
+192.168.227.227  dnstest1.example.com.
+192.168.227.228  dnstest2.example.com.
+192.168.227.229  dnstest2.example.com.
+ptr-record=dnstest1,192.168.227.227
+ptr-record=dnstest2,192.168.227.228
